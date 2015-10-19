@@ -3,14 +3,27 @@ package chat.client;
 
 import java.io.BufferedReader;
 import java.io.EOFException;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
+
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManagerFactory;
 
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
@@ -22,7 +35,7 @@ import chat.client.handler.RoomContentsHandler;
 import chat.client.handler.RoomListHandler;
 import chat.common.JsonHandler;
 
-
+//hope it gets pushed
 public class TCPClient {
 	
 	
@@ -34,7 +47,7 @@ public class TCPClient {
 	
 	public static void main (String args[]) {
 		
-		Socket s = null;
+		SSLSocket s = null;
 		CommandLineValuesClient values = new CommandLineValuesClient();
 		CmdLineParser parser = new CmdLineParser(values);
 
@@ -43,7 +56,12 @@ public class TCPClient {
 			parser.parseArgument(args);
 			TCPClient.setMyHost(values.getHost());
 			int serverPort = values.getPort();
-			s = new Socket(values.getHost(), serverPort);  
+			String password = "password";
+			String fileSep = System.getProperty("file.separator");
+			File JKS = new File("Resources" + fileSep + "server2.jks");
+			char[] myPassword = password.toCharArray();
+			System.out.println("myPassword " + myPassword.toString() + ", myHost: " + myHost + ", serverPort " + serverPort);
+			s = setupSSL(getMyHost(), serverPort, myPassword, JKS);  
 			BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream(),"UTF-8"));
 			OutputStreamWriter out =new OutputStreamWriter( s.getOutputStream(),"UTF-8");
 			consoleReader(out);
@@ -80,12 +98,13 @@ public class TCPClient {
 			System.err.println(e.getMessage());
 			parser.printUsage(System.err);
 			System.exit(-1);
+			
 		}finally {
 			if(s!=null){
 				try {
 					s.close();
 				}catch (IOException e){
-					System.out.println("close:"+e.getMessage());
+					System.out.println("close: "+e.getMessage());
 				}
 			}
 		}	
@@ -295,6 +314,33 @@ public class TCPClient {
 
 	public static boolean isQuit() {
 		return quit;
+	}
+	
+	
+	private static SSLSocket setupSSL(String host, int port, char[] password, File JKS) {
+		SSLSocket SSLsocket = null;	
+		SSLContext SSLcontext = null;
+		KeyManagerFactory keyManagerFactory = null;
+
+			
+		try {
+			SSLContext sslContext = SSLContext.getInstance( "SSL" );
+            KeyStore keyStore = KeyStore.getInstance("JKS");
+            TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
+            
+            keyStore.load(new FileInputStream(JKS),password);
+            trustManagerFactory.init(keyStore);
+            sslContext.init(null, trustManagerFactory.getTrustManagers(), null);
+            SSLSocketFactory f = sslContext.getSocketFactory();
+            SSLsocket = (SSLSocket) f.createSocket(host,port);
+		} catch (NoSuchAlgorithmException| KeyStoreException| 
+				CertificateException| IOException|
+				KeyManagementException e) {
+			e.printStackTrace();
+			System.out.println(e);
+		} 
+		System.out.println("Am I here?");
+		return SSLsocket;
 	}
 	
 }
