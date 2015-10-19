@@ -18,6 +18,7 @@ public class Connection extends Thread {
 	private String roomID;
 	private Map<String, Date> blacklistedRooms = new HashMap<String, Date>();
 	private boolean quit;
+	private Account account;
 	
 	
 	public Connection (Socket aClientSocket, String userName, String roomID) {
@@ -91,6 +92,14 @@ public class Connection extends Thread {
 	public void setUserName(String userName) {
 		this.userName = userName;
 		this.setName(userName);
+	}
+	
+	public Account getAccount(){
+		return account;
+	}
+	
+	public void setAccount(Account newAccount){
+		account = newAccount;
 	}
 	
 	public String setFirstUserName(){

@@ -43,6 +43,10 @@ public class ChatRoom {
         return owner;
     }
 	
+	public void setOwner(Connection newOwner) {
+        owner = newOwner;
+    }
+	
 	public String getOwnername() {
         return owner != null ? owner.getUserName() : "";
     }

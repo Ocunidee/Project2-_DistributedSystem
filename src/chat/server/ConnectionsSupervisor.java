@@ -26,7 +26,8 @@ public class ConnectionsSupervisor {
 
 	private static Set<Connection> clients = ConcurrentHashMap.newKeySet();
 	final static Set<Long> guestsID =  Collections.synchronizedSet(new TreeSet<Long>());
-	final static Map<String, ChatRoom> chatRooms = new ConcurrentHashMap<String, ChatRoom>(); 
+	final static Map<String, ChatRoom> chatRooms = new ConcurrentHashMap<String, ChatRoom>();
+	final static Map<String, Account> accounts = new ConcurrentHashMap<String, Account>();
 	
 	
 
@@ -103,6 +104,14 @@ public class ConnectionsSupervisor {
 	
 	public static ChatRoom getChatRoomByID(String roomID){
 		return chatRooms.get(roomID);
+	}
+	
+	public static Map<String, Account> getAccounts(){
+		return accounts;
+	}
+	
+	public static Account getAccountByUsername(String username){
+		return accounts.get(username);
 	}
 	
 	
