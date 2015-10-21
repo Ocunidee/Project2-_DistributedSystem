@@ -35,7 +35,7 @@ import chat.client.handler.RoomContentsHandler;
 import chat.client.handler.RoomListHandler;
 import chat.common.JsonHandler;
 
-//hope it gets pushed
+
 public class TCPClient {
 	
 	

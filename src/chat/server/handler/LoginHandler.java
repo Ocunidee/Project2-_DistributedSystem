@@ -12,7 +12,7 @@ import chat.server.ConnectionsSupervisor;
 
 public class LoginHandler extends AbstractCommandHandler {
 
-	public static final String TYPE_KEY = "authenticate";
+	public static final String TYPE_KEY = "login";
 	
 	@Override
 	public void handle(Map<String, Object> in_message, Connection sender, String currentRoomID) {
