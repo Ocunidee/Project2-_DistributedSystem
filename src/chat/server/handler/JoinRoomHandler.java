@@ -43,7 +43,7 @@ public class JoinRoomHandler extends AbstractCommandHandler {
 		if(!currentRoomID.equals("")){
 			final ChatRoom currentChatRoom = ConnectionsSupervisor.getChatRoomByID(currentRoomID);
             currentChatRoom.removeUser(client);
-			if(currentChatRoom.getUserList().isEmpty() && currentChatRoom.getOwner() == null && !"MainHall".equals(currentRoomID)) {
+			if(currentChatRoom.getUserList().isEmpty() && currentChatRoom.getOwner() == null && !"MainHall".equals(currentRoomID) && !currentChatRoom.isOwnedByAccount()) {
 			    ConnectionsSupervisor.removeChatRoom(currentRoomID);
             }
 		}

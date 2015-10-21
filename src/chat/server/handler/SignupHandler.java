@@ -23,7 +23,7 @@ public class SignupHandler extends AbstractCommandHandler {
 		}
 		else{
 			String username = (String) in_message.get("username");
-			if(isValidUserName(username)){
+			if(isValidUserName(username) && !ConnectionsSupervisor.isUserNameTaken(username)){
 				String password = (String) in_message.get("password");
 				try {
 					Account account = new Account(username, password);
@@ -33,7 +33,7 @@ public class SignupHandler extends AbstractCommandHandler {
 				}
 				sender.sendMessage(new MessageHandler().newMessage("You have signed up successfully. You can now login", "system"));
 			} else {
-				sender.sendMessage(new MessageHandler().newMessage("The username you requested is already in use.", "system"));
+				sender.sendMessage(new MessageHandler().newMessage("The username you requested is already in use or doesn't respect the format.", "system"));
 			}
 		}
 	}

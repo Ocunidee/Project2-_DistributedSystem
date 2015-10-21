@@ -173,5 +173,15 @@ public class ConnectionsSupervisor {
             guestsID.add(Long.valueOf(newUsername.substring(5)));
         }
     }
+    
+    public static boolean isUserNameTaken(String username){
+    	boolean isTaken = false;
+    	for (String usernameExisting : ConnectionsSupervisor.getAccounts().keySet()){
+    		if (username.equals(usernameExisting)){
+    			isTaken = true;
+    		}
+    	}
+    	return isTaken;
+    }
 	
 }

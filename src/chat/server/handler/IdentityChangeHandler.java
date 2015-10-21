@@ -22,7 +22,6 @@ public class IdentityChangeHandler extends AbstractCommandHandler {
 		if (isValidUserName(newId)){
 			sender.setUserName(newId);
 			ConnectionsSupervisor.updateGuestIdOnNameChange(oldUsername, newId);
-			
 			ConnectionsSupervisor.getChatRoomByID(currentRoomID).removeUser(sender);
 			ConnectionsSupervisor.getChatRoomByID(currentRoomID).addUser(sender);
 			ConnectionsSupervisor.broadcast(changeIdentity(oldUsername, newId), null);
@@ -43,13 +42,17 @@ public class IdentityChangeHandler extends AbstractCommandHandler {
 	
 	private boolean isValidUserName(String name) {
 		boolean nameTaken = false;
+		boolean isSystem = false;
+		if (name.equals("system")){
+			isSystem = true;
+		}
 		for (Connection c : ConnectionsSupervisor.getClients()){
 			if (c.getUserName().equals(name) ){
 				nameTaken = true;
 				break;
 			}
 		}
-		return name.matches("[a-zA-Z][a-zA-Z0-9]{2,15}") && !nameTaken;
+		return name.matches("[a-zA-Z][a-zA-Z0-9]{2,15}") && !nameTaken && !isSystem;
 	}
 	
 	public String getTYPE_KEY() {
