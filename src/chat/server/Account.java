@@ -59,11 +59,11 @@ public class Account {
 		return (currentUser == null);
 	}
 	
-	public String getScreeName() {
+	public String getScreenName() {
 		return screenName;
 	}
 	
-	public void setScreeName(String newScreenName) {
+	public void setScreenName(String newScreenName) {
 		screenName = newScreenName;
 	}
 	

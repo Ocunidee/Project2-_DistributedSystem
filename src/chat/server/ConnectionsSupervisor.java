@@ -18,8 +18,10 @@ import chat.server.handler.IdentityChangeHandler;
 import chat.server.handler.JoinRoomHandler;
 import chat.server.handler.KickHandler;
 import chat.server.handler.ListHandler;
+import chat.server.handler.LoginHandler;
 import chat.server.handler.MessageHandler;
 import chat.server.handler.QuitHandler;
+import chat.server.handler.SignupHandler;
 import chat.server.handler.WhoHandler;
 
 public class ConnectionsSupervisor {
@@ -44,6 +46,8 @@ public class ConnectionsSupervisor {
 		handlers.add(6, new ListHandler());
 		handlers.add(7, new CreateRoomHandler());
 		handlers.add(8, new WhoHandler());
+		handlers.add(9, new SignupHandler());
+		handlers.add(10, new LoginHandler());
 		
 		addChatRooms("MainHall", null);
 	}

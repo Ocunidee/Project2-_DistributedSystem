@@ -9,21 +9,23 @@ import chat.server.ConnectionsSupervisor;
 
 public class SignupHandler extends AbstractCommandHandler {
 
-	public static final String TYPE_KEY = "authenticate";
+	public static final String TYPE_KEY = "signup";
 	
 	@Override
 	public void handle(Map<String, Object> in_message, Connection sender, String currentRoomID) {
 		if(sender.getAccount() != null){
-			//TODO warn sender they are already logged in
+			sender.sendMessage(new MessageHandler().newMessage("You are already logged in.", "system"));
 		}
-		String username = (String) in_message.get("identity");
-		if(isValidUserName(username)){
-			String password = (String) in_message.get("password");
-			Account account = new Account(username, password, sender);
-			//TODO find all rooms owned by sender and add to account
-			//update screenname
-		} else {
-			//warn user username is taken
+		else{
+			String username = (String) in_message.get("username");
+			if(isValidUserName(username)){
+				String password = (String) in_message.get("password");
+				Account account = new Account(username, password, sender);
+				//TODO find all rooms owned by sender and add to account
+				//update screenname
+			} else {
+				//warn user username is taken
+			}
 		}
 	}
 
