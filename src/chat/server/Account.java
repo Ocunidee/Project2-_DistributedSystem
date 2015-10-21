@@ -8,7 +8,10 @@ import java.security.spec.KeySpec;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.crypto.SecretKeyFactory;
@@ -19,7 +22,7 @@ public class Account {
 	private String userName;
 	private byte[] encryptedPassword;
 	private byte[] salt;
-	private ArrayList<String> ownedRooms = new ArrayList<String>();
+	private Set<String> ownedRooms = new HashSet<String>();
 	
 	public Account(String userName, String password) throws NoSuchAlgorithmException, InvalidKeySpecException{
 		this.userName = userName;
@@ -61,15 +64,17 @@ public class Account {
 	 }
 	
 	public void addRoomOwnership(String roomID){
-		ownedRooms.add(roomID);
-		ChatRoom room = ConnectionsSupervisor.getChatRoomByID(roomID);
-		room.setOwnedByAccount(true);
+		if(ownedRooms.add(roomID)){
+			ChatRoom room = ConnectionsSupervisor.getChatRoomByID(roomID);
+			room.setOwnedByAccount(true);
+		}
 	}
 	
 	public void removeRoomOwnership(String roomID){
-		ownedRooms.remove(roomID);
-		ChatRoom room = ConnectionsSupervisor.getChatRoomByID(roomID);
-		room.setOwnedByAccount(false);
+		if(ownedRooms.remove(roomID)){
+			ChatRoom room = ConnectionsSupervisor.getChatRoomByID(roomID);
+			room.setOwnedByAccount(false);
+		}
 	}
 
 	public String getUsername() {

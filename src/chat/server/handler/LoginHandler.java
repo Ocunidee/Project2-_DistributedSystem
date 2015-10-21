@@ -24,24 +24,37 @@ public class LoginHandler extends AbstractCommandHandler {
 		String username = (String) in_message.get("username");
 		String password = (String) in_message.get("password");
 		Account account = ConnectionsSupervisor.getAccountByUsername(username);
-		if (account.authenticate(password)){			
-			
-			Collection<ChatRoom> chatRooms = ConnectionsSupervisor.getChatRooms();
-			//TODO find all rooms owned by sender and add to account
-			//account.addRoomOwnership()
-			
-			
-			//update all rooms owned by account to have a reference to the new owner Connection object
-			String[] ownedRooms = account.getOwnedRooms();
-			for (int i = 0; i< ownedRooms.length; i++){
-				ChatRoom room = ConnectionsSupervisor.getChatRoomByID(ownedRooms[i]);
-				room.setOwner(sender);
-			}
+		if (account != null && account.authenticate(password)){			
+			setAccountsRooms(sender, account);
+			setRoomsAccount(sender, account);
 			sender.sendMessage(new MessageHandler().newMessage("Login successful", "system"));
 			return;
 		} else {
 			sender.sendMessage(new MessageHandler().newMessage("Incorrect username or password", "system"));
 			return;
+		}
+	}
+
+	/*
+	 * Look for rooms owned by Connection sender and add them to the account
+	 */
+	private void setAccountsRooms(Connection sender, Account account){
+		for (ChatRoom room: ConnectionsSupervisor.getChatRooms()){
+			if (room.getOwner().equals(sender)){
+				String roomID = room.getRoomID();
+				account.addRoomOwnership(roomID);
+			}
+		}
+	}
+	
+	/*
+	 * set the owner of all rooms listed under account to be sender
+	 */
+	private void setRoomsAccount(Connection sender, Account account){
+		String[] ownedRooms = account.getOwnedRooms();
+		for (int i = 0; i< ownedRooms.length; i++){
+			ChatRoom room = ConnectionsSupervisor.getChatRoomByID(ownedRooms[i]);
+			room.setOwner(sender);
 		}
 	}
 
