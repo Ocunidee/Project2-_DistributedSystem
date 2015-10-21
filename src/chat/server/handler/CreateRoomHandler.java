@@ -19,6 +19,9 @@ public class CreateRoomHandler extends AbstractCommandHandler {
 		String new_roomID = (String) in_message.get("roomid");
 		if (isValidRoomID(new_roomID)){
 			new ChatRoom(new_roomID, sender);
+			if(sender.getAccount() != null){
+				sender.getAccount().addRoomOwnership(new_roomID);
+			}
 		}
 		sender.sendMessage(createRoom());
 	}

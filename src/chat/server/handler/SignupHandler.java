@@ -31,8 +31,6 @@ public class SignupHandler extends AbstractCommandHandler {
 				} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
 					e.printStackTrace();
 				}
-				//TODO find all rooms owned by sender and add to account
-				//update screenname
 				sender.sendMessage(new MessageHandler().newMessage("You have signed up successfully. You can now login", "system"));
 			} else {
 				sender.sendMessage(new MessageHandler().newMessage("The username you requested is already in use.", "system"));

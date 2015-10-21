@@ -3,6 +3,7 @@ package chat.server.handler;
 import java.util.Map;
 
 import chat.common.AbstractCommandHandler;
+import chat.server.ChatRoom;
 import chat.server.Connection;
 import chat.server.ConnectionsSupervisor;
 
@@ -15,14 +16,17 @@ public class DeleteHandler extends AbstractCommandHandler {
 	@Override
 	public void handle(Map<String, Object> in_message, Connection sender, String currentRoomID) {
 		String roomID = (String) in_message.get("roomid");
-		if (ConnectionsSupervisor.getChatRoomByID(roomID).getOwner().equals(sender)){
-			for (Connection user : ConnectionsSupervisor.getChatRoomByID(roomID).getUserList()){
-				JoinRoomHandler roomHandler = new JoinRoomHandler();
-				String out_json = roomHandler.joinRoom(user, "MainHall", roomID);
-				ConnectionsSupervisor.broadcast(out_json, "MainHall");
+		ChatRoom chatroom = ConnectionsSupervisor.getChatRoomByID(roomID);
+		if (chatroom.getOwner().equals(sender)){
+			if (){
+				for (Connection user : ConnectionsSupervisor.getChatRoomByID(roomID).getUserList()){
+					JoinRoomHandler roomHandler = new JoinRoomHandler();
+					String out_json = roomHandler.joinRoom(user, "MainHall", roomID);
+					ConnectionsSupervisor.broadcast(out_json, "MainHall");
+				}
+				ConnectionsSupervisor.removeChatRoom(roomID);
+				sender.sendMessage(new ListHandler().roomList());
 			}
-			ConnectionsSupervisor.removeChatRoom(roomID);
-			sender.sendMessage(new ListHandler().roomList());
 		}
 	}
 
