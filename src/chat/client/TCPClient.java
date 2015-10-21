@@ -211,6 +211,28 @@ public class TCPClient {
 				}
 				else out_json.put("roomid", tokens[1]);
 				break;
+			case "signup":
+				if (tokens.length <= 2){
+					System.out.println("Missing argument. example : #signup username password");
+					System.out.print("[" + getRoomID() + "] "+ getUserName() + "> ");
+					out_json.put("type", "invalid");
+				}
+				else {
+					out_json.put("username", tokens[1]);
+					out_json.put("password", tokens[2]);
+				}
+				break;
+			case "login":
+				if (tokens.length <= 2){
+					System.out.println("Missing argument. example : #login username password");
+					System.out.print("[" + getRoomID() + "] "+ getUserName() + "> ");
+					out_json.put("type", "invalid");
+				}
+				else {
+					out_json.put("username", tokens[1]);
+					out_json.put("password", tokens[2]);
+				}
+				break;
 			case "quit":
 			//	setQuit(true);
 				break;
