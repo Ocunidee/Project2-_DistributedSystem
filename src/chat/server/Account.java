@@ -1,43 +1,58 @@
+// Inspirations and some code taken from http://blog.jerryorr.com/2012/05/secure-password-storage-lots-of-donts.html
 package chat.server;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.KeySpec;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.PBEKeySpec;
+
 public class Account {
 	
 	private String userName;
-	private Connection currentUser;
-	private String screenName;
-//	private encPass;
-//	private salt;
+	private byte[] encryptedPassword;
+	private byte[] salt;
 	private ArrayList<String> ownedRooms = new ArrayList<String>();
 	
-	public Account(String userName, String password, Connection clientConnection){
+	public Account(String userName, String password) throws NoSuchAlgorithmException, InvalidKeySpecException{
 		this.userName = userName;
 		this.setPassword(password);
-		this.currentUser = clientConnection;
-		//TODO find rooms owned by connection and add to ownedRooms
 	}
 	
-	private void setPassword(String password){
-		//TODO
-		//generate salt
-		//save salt to private variable salt
-		//add salt to password
-		//encrypt salted password
-		//save encryption to encPass
+	private void setPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException{
+		salt = generateSalt();
+		encryptedPassword = getEncryptedPassword(password);
 		return;
 	}
 	
-	public boolean authenticate(String password){
-		//TODO
-		//add salt to password
-		//encrypt
-		//check result matches 'encPass'
-		return true;
+	public boolean authenticate(String attemptedPassword) throws NoSuchAlgorithmException, InvalidKeySpecException {
+		 byte[] encryptedAttemptedPassword = getEncryptedPassword(attemptedPassword);
+		 return Arrays.equals(encryptedPassword, encryptedAttemptedPassword);
 	}
+	
+	private byte[] getEncryptedPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
+	  String algorithm = "PBKDF2WithHmacSHA1";
+	  int derivedKeyLength = 160;
+	  int iterations = 20000;
+	  KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, iterations, derivedKeyLength);
+	  SecretKeyFactory f = SecretKeyFactory.getInstance(algorithm);
+	  return f.generateSecret(spec).getEncoded();
+	 }
+	
+	
+	public byte[] generateSalt() throws NoSuchAlgorithmException {
+	  SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
+	  byte[] salt = new byte[8];
+	  random.nextBytes(salt);
+	  return salt;
+	 }
 	
 	public void addRoomOwnership(String roomID){
 		ownedRooms.add(roomID);
@@ -46,25 +61,9 @@ public class Account {
 	public void removeRoomOwnership(String roomID){
 		ownedRooms.remove(roomID);
 	}
-	
-	public void logout(){
-		currentUser = null;
-	}
 
 	public String getUsername() {
 		return userName;
-	}
-	
-	public boolean isLoggedIn() {
-		return (currentUser == null);
-	}
-	
-	public String getScreeName() {
-		return screenName;
-	}
-	
-	public void setScreeName(String newScreenName) {
-		screenName = newScreenName;
 	}
 	
 	public String[] getOwnedRooms(){
