@@ -1,5 +1,6 @@
 package chat.server.handler;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -17,27 +18,43 @@ public class LoginHandler extends AbstractCommandHandler {
 	@Override
 	public void handle(Map<String, Object> in_message, Connection sender, String currentRoomID) {
 		if(sender.getAccount() != null){
-			//TODO warn sender they are already logged in
+			sender.sendMessage(new MessageHandler().newMessage("Already logged in", "system"));
+			return;
 		}
-		String username = (String) in_message.get("identity");
+		String username = (String) in_message.get("username");
 		String password = (String) in_message.get("password");
 		Account account = ConnectionsSupervisor.getAccountByUsername(username);
-		if (account.isLoggedIn())
-			return;//TODO message client someone is on that account
-		if (account.authenticate(password)){
-			//TODO do a change id for client, newID is =account.getScreenName()
-			
-			//TODO find all rooms owned by sender and add to account
-			
-			//update all rooms owned by account to have a reference to the new owner Connection object
-			String[] ownedRooms = account.getOwnedRooms();
-			for (int i = 0; i< ownedRooms.length; i++){
-				ChatRoom room = ConnectionsSupervisor.getChatRoomByID(ownedRooms[i]);
-				room.setOwner(sender);
-			}
-			return;//let client know they logged in successfully?
+		if (account != null && account.authenticate(password)){			
+			setAccountsRooms(sender, account);
+			setRoomsAccount(sender, account);
+			sender.sendMessage(new MessageHandler().newMessage("Login successful", "system"));
+			return;
 		} else {
-			return;//let client know username or password is incorrect
+			sender.sendMessage(new MessageHandler().newMessage("Incorrect username or password", "system"));
+			return;
+		}
+	}
+
+	/*
+	 * Look for rooms owned by Connection sender and add them to the account
+	 */
+	private void setAccountsRooms(Connection sender, Account account){
+		for (ChatRoom room: ConnectionsSupervisor.getChatRooms()){
+			if (room.getOwner().equals(sender)){
+				String roomID = room.getRoomID();
+				account.addRoomOwnership(roomID);
+			}
+		}
+	}
+	
+	/*
+	 * set the owner of all rooms listed under account to be sender
+	 */
+	private void setRoomsAccount(Connection sender, Account account){
+		String[] ownedRooms = account.getOwnedRooms();
+		for (int i = 0; i< ownedRooms.length; i++){
+			ChatRoom room = ConnectionsSupervisor.getChatRoomByID(ownedRooms[i]);
+			room.setOwner(sender);
 		}
 	}
 
