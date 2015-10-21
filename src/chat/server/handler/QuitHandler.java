@@ -34,13 +34,11 @@ public class QuitHandler extends AbstractCommandHandler {
     			if (sender.equals(room.getOwner())){
     				room.discardOwner();
     			}
-    			if (room.getUserList().isEmpty() && (room.getOwner() == null && !room.getRoomID().equals("MainHall"))){
+    			if (!room.isOwnedByAccount() && room.getUserList().isEmpty() && room.getOwner() == null && !room.getRoomID().equals("MainHall")){
     				iterator.remove();
     			}
     		}
-
 		}
-		
 		ConnectionsSupervisor.removeClient(sender);
 	}
 
