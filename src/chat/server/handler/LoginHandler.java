@@ -18,7 +18,7 @@ public class LoginHandler extends AbstractCommandHandler {
 	@Override
 	public void handle(Map<String, Object> in_message, Connection sender, String currentRoomID) {
 		if(sender.getAccount() != null){
-			sender.sendMessage(new MessageHandler().newMessage("Already logged in", "system"));
+			sender.sendMessage(new MessageHandler().newMessage("You are already logged in.", "system"));
 			return;
 		}
 		String username = (String) in_message.get("username");
