@@ -57,7 +57,10 @@ public class ConnectionsSupervisor {
 	    new ChatRoom(roomID, owner);
 	}
 	
-
+	public static void addAccount(Account account){
+		System.out.println("Creating account");
+		accounts.put(account.getUsername(), account);
+	}
 	
 	public static void doWithJson(String in_json, Connection sender, String currentRoomID){
 		JsonHandler jsonHandler = new JsonHandler();

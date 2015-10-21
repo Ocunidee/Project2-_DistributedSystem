@@ -67,7 +67,7 @@ public class TCPClient {
 			consoleReader(out);
 			while(userName == "" || roomID == "") {
 				try {
-					Thread.sleep(10);
+					Thread.sleep(40);
 					String connectData = in.readLine();
 					System.out.println(doWithInJson(connectData));
 				} catch (InterruptedException e) {

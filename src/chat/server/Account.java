@@ -27,6 +27,7 @@ public class Account {
 	public Account(String userName, String password) throws NoSuchAlgorithmException, InvalidKeySpecException{
 		this.userName = userName;
 		this.setPassword(password);
+		ConnectionsSupervisor.addAccount(this);
 	}
 	
 	private void setPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException{

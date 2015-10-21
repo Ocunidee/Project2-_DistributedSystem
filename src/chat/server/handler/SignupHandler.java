@@ -28,6 +28,7 @@ public class SignupHandler extends AbstractCommandHandler {
 				try {
 					Account account = new Account(username, password);
 					setAccountsRooms(sender, account);
+					ConnectionsSupervisor.addAccount(account);
 				} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
 					e.printStackTrace();
 				}
