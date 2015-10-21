@@ -9,6 +9,7 @@ public class ChatRoom {
 	private String roomID;
 	private Map<String, Connection> userList = new ConcurrentHashMap<>();
 	private Connection owner;
+	private boolean ownedByAccount;
 	
 	public ChatRoom(String roomID, Connection sender){
 		this.roomID = roomID;
@@ -22,6 +23,13 @@ public class ChatRoom {
 		return c;
 	}
 
+	public boolean isOwnedByAccount() {
+		return ownedByAccount;
+	}
+
+	public void setOwnedByAccount(boolean ownedByAccount) {
+		this.ownedByAccount = ownedByAccount;
+	}
 
 	public String getRoomID() {
 		return roomID;
