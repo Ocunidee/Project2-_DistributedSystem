@@ -48,10 +48,7 @@ public class ChatRoom {
     }
 
 	public Connection getOwner() {
-		if (owner != null){
-			return owner;
-		}
-        return null;
+		return owner;
     }
 	
 	public void setOwner(Connection newOwner) {

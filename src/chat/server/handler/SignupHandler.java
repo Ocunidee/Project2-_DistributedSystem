@@ -42,7 +42,7 @@ public class SignupHandler extends AbstractCommandHandler {
 	
 	private void setAccountsRooms(Connection sender, Account account){
 		for (ChatRoom room: ConnectionsSupervisor.getChatRooms()){
-			if (room.getOwner() != null){
+			if (!room.getOwner().equals("")){
 				if (room.getOwner().equals(sender)){
 					String roomID = room.getRoomID();
 					account.addRoomOwnership(roomID);
