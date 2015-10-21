@@ -1,9 +1,14 @@
 package chat.server.handler;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import chat.common.AbstractCommandHandler;
 import chat.server.Account;
+import chat.server.ChatRoom;
 import chat.server.Connection;
 import chat.server.ConnectionsSupervisor;
 
@@ -20,11 +25,27 @@ public class SignupHandler extends AbstractCommandHandler {
 			String username = (String) in_message.get("username");
 			if(isValidUserName(username)){
 				String password = (String) in_message.get("password");
-				Account account = new Account(username, password, sender);
+				try {
+					Account account = new Account(username, password);
+					setAccountsRooms(sender, account);
+				} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+					e.printStackTrace();
+				}
 				//TODO find all rooms owned by sender and add to account
 				//update screenname
+				sender.sendMessage(new MessageHandler().newMessage("You have signed up successfully. You can now login", "system"));
 			} else {
-				//warn user username is taken
+				sender.sendMessage(new MessageHandler().newMessage("The username you requested is already in use.", "system"));
+			}
+		}
+	}
+	
+	
+	private void setAccountsRooms(Connection sender, Account account){
+		for (ChatRoom room: ConnectionsSupervisor.getChatRooms()){
+			if (room.getOwner().equals(sender)){
+				String roomID = room.getRoomID();
+				account.addRoomOwnership(roomID);
 			}
 		}
 	}
@@ -40,5 +61,7 @@ public class SignupHandler extends AbstractCommandHandler {
 	public String getTYPE_KEY() {
 		return TYPE_KEY;
 	}
+	
+	
 	
 }
