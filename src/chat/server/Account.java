@@ -23,6 +23,8 @@ public class Account {
 	private byte[] encryptedPassword;
 	private byte[] salt;
 	private Set<String> ownedRooms = new HashSet<String>();
+	private int failedLoginAttempts = 0;
+	private final int MAXLOGIN = 3;
 	
 	public Account(String userName, String password) throws NoSuchAlgorithmException, InvalidKeySpecException{
 		this.userName = userName;
@@ -37,6 +39,10 @@ public class Account {
 	}
 	
 	public boolean authenticate(String attemptedPassword) {
+		if (failedLoginAttempts >= MAXLOGIN){
+			failedLoginAttempts++;
+			return false;
+		}
 		byte[] encryptedAttemptedPassword;
 		try {
 			encryptedAttemptedPassword = getEncryptedPassword(attemptedPassword);
@@ -44,7 +50,13 @@ public class Account {
 			e.printStackTrace();
 			return false;
 		}
-		 return Arrays.equals(encryptedPassword, encryptedAttemptedPassword);
+		 if (Arrays.equals(encryptedPassword, encryptedAttemptedPassword)){
+			 failedLoginAttempts = 0;
+			 return true;
+		 } else {
+		 	failedLoginAttempts++;
+			 return false;
+		 }
 	}
 	
 	private byte[] getEncryptedPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -87,4 +99,13 @@ public class Account {
 		return ownedRooms.toArray(tmp);
 	}
 
+	public int getFailedLoginAttempts() {
+		return failedLoginAttempts;
+	}
+
+	public int getMAXLOGIN() {
+		return MAXLOGIN;
+	}
+	
+	
 }

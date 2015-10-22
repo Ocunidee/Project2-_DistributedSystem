@@ -30,7 +30,13 @@ public class LoginHandler extends AbstractCommandHandler {
 			sender.sendMessage(new MessageHandler().newMessage("Login successful", "system"));
 			return;
 		} else {
-			sender.sendMessage(new MessageHandler().newMessage("Incorrect username or password", "system"));
+			if(account.getFailedLoginAttempts() < account.getMAXLOGIN())
+				sender.sendMessage(new MessageHandler().newMessage("Incorrect username or password. "
+						+ "You have used " + account.getFailedLoginAttempts() + " out of " + account.getMAXLOGIN() 
+						+ " maximum login attempts.", "system"));
+			else
+				sender.sendMessage(new MessageHandler().newMessage("This account is locked, "
+						+ "please contact system admin to recover", "system"));
 			return;
 		}
 	}

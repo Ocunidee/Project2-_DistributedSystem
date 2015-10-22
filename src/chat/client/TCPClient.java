@@ -341,10 +341,6 @@ public class TCPClient {
 	
 	private static SSLSocket setupSSL(String host, int port, char[] password, File JKS) {
 		SSLSocket SSLsocket = null;	
-		SSLContext SSLcontext = null;
-		KeyManagerFactory keyManagerFactory = null;
-
-			
 		try {
 			SSLContext sslContext = SSLContext.getInstance( "SSL" );
             KeyStore keyStore = KeyStore.getInstance("JKS");
@@ -361,7 +357,6 @@ public class TCPClient {
 			e.printStackTrace();
 			System.out.println(e);
 		} 
-		System.out.println("Am I here?");
 		return SSLsocket;
 	}
 	
