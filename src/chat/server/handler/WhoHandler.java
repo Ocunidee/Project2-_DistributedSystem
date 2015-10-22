@@ -25,6 +25,9 @@ public class WhoHandler extends AbstractCommandHandler {
     	if (room != null) {
     		out_message.put("identities", room.getUsernameList());
     		out_message.put("owner", room.getOwnername());
+    	} else {
+    		out_message.put("identities", new String[0]);
+    		out_message.put("owner", "");
     	}
 	    out_message.put("type", "roomcontents");
 	    out_message.put("roomid", roomID);

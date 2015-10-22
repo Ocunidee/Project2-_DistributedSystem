@@ -79,14 +79,16 @@ public class Account {
 	public void addRoomOwnership(String roomID){
 		if(ownedRooms.add(roomID)){
 			ChatRoom room = ConnectionsSupervisor.getChatRoomByID(roomID);
-			room.setOwnedByAccount(true);
+			if (room != null)
+				room.setOwnedByAccount(true);
 		}
 	}
 	
 	public void removeRoomOwnership(String roomID){
 		if(ownedRooms.remove(roomID)){
 			ChatRoom room = ConnectionsSupervisor.getChatRoomByID(roomID);
-			room.setOwnedByAccount(false);
+			if (room != null)
+				room.setOwnedByAccount(false);
 		}
 	}
 

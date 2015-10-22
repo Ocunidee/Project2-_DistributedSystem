@@ -27,6 +27,7 @@ public class SignupHandler extends AbstractCommandHandler {
 				String password = (String) in_message.get("password");
 				try {
 					Account account = new Account(username, password);
+					sender.setAccount(account);
 					setAccountsRooms(sender, account);
 					ConnectionsSupervisor.addAccount(account);
 				} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {

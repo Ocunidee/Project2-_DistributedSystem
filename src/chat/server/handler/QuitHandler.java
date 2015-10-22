@@ -35,6 +35,7 @@ public class QuitHandler extends AbstractCommandHandler {
     				room.discardOwner();
     			}
     			if (!room.isOwnedByAccount() && room.getUserList().isEmpty() && room.getOwner() == null && !room.getRoomID().equals("MainHall")){
+    				System.out.println("QuitHandler: Removing room " + room.getRoomID());
     				iterator.remove();
     			}
     		}
