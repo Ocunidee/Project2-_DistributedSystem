@@ -128,7 +128,7 @@ public class ConnectionsSupervisor {
 				return c;
 			}
 		}
-		throw new RuntimeException("Client " + userName + " connection not found.");
+		return null;
 	}
 	
 	

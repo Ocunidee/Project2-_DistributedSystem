@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Map;
 
 import chat.common.AbstractCommandHandler;
+import chat.server.ChatRoom;
 import chat.server.Connection;
 import chat.server.ConnectionsSupervisor;
 
@@ -20,11 +21,20 @@ public class KickHandler extends AbstractCommandHandler{
 	    String usernameToKick = (String) in_message.get("identity");
 	    int time = ((Double) in_message.get("time")).intValue();
 	    String roomID = (String) in_message.get("roomid");
+	    ChatRoom room = ConnectionsSupervisor.getChatRoomByID(roomID);
+	    if (room == null){
+	    	sender.sendMessage(new MessageHandler().newMessage("That room doesn't exist.", "system"));
+	    	return;
+	    }
 	    Connection userToKick = ConnectionsSupervisor.getClientByUserName(usernameToKick);
-	    if (sender.equals(ConnectionsSupervisor.getChatRoomByID(roomID).getOwner()) && ConnectionsSupervisor.getChatRoomByID(roomID).getUserList().contains(userToKick)){
+	    if (userToKick == null){
+	    	sender.sendMessage(new MessageHandler().newMessage("That user does not exist.", "system"));
+	    	return;
+	    }
+	    if (room.getOwnername().equals(sender.getUserName()) && room.getUserList().contains(userToKick)){
 	    	kick(roomID, userToKick, time, sender);
 	    } else {
-	        sender.sendMessage(new MessageHandler().newMessage("kick failed.", "system"));
+	        sender.sendMessage(new MessageHandler().newMessage("You do not own this room.", "system"));
 	    }
     }
 	

@@ -33,7 +33,7 @@ public class SignupHandler extends AbstractCommandHandler {
 				} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
 					e.printStackTrace();
 				}
-				sender.sendMessage(new MessageHandler().newMessage("You have signed up successfully. You can now login", "system"));
+				sender.sendMessage(new MessageHandler().newMessage("You have signed up successfully and are now logged in", "system"));
 			} else {
 				sender.sendMessage(new MessageHandler().newMessage("The username you requested is already in use or doesn't respect the format.", "system"));
 			}

@@ -10,10 +10,7 @@ public class RoomContentsHandler {
 		String userNames = "";
 		
 		if (((ArrayList<String>)in_message.get("identities")).isEmpty()){
-			if (((String)in_message.get("owner")).equals("")){
-				return (String) in_message.get("roomid") + " is yet to be created.";
-			}
-			else return (String) in_message.get("roomid") + " is empty.";
+			return (String) in_message.get("roomid") + " is empty.";
 		}
 		else
 			for (String identity : (ArrayList<String>) in_message.get("identities")){
