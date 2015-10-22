@@ -17,7 +17,7 @@ public class DeleteHandler extends AbstractCommandHandler {
 	public void handle(Map<String, Object> in_message, Connection sender, String currentRoomID) {
 		String roomID = (String) in_message.get("roomid");
 		ChatRoom chatroom = ConnectionsSupervisor.getChatRoomByID(roomID);
-		if (chatroom.getOwner().equals(sender)){
+		if (sender.equals(chatroom.getOwner())){
 			// TODO if logout is implemented then we will have to check if the owner is authenticated, else not necessary
 			for (Connection user : ConnectionsSupervisor.getChatRoomByID(roomID).getUserList()){
 				JoinRoomHandler roomHandler = new JoinRoomHandler();

@@ -21,7 +21,7 @@ public class KickHandler extends AbstractCommandHandler{
 	    int time = ((Double) in_message.get("time")).intValue();
 	    String roomID = (String) in_message.get("roomid");
 	    Connection userToKick = ConnectionsSupervisor.getClientByUserName(usernameToKick);
-	    if (ConnectionsSupervisor.getChatRoomByID(roomID).getOwner().equals(sender) && ConnectionsSupervisor.getChatRoomByID(roomID).getUserList().contains(userToKick)){
+	    if (sender.equals(ConnectionsSupervisor.getChatRoomByID(roomID).getOwner()) && ConnectionsSupervisor.getChatRoomByID(roomID).getUserList().contains(userToKick)){
 	    	kick(roomID, userToKick, time, sender);
 	    } else {
 	        sender.sendMessage(new MessageHandler().newMessage("kick failed.", "system"));

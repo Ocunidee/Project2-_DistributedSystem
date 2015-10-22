@@ -8,6 +8,7 @@ public class RoomContentsHandler {
 	@SuppressWarnings("unchecked")
 	public static String handle(Map<String, Object> in_message){
 		String userNames = "";
+		
 		if (((ArrayList<String>)in_message.get("identities")).isEmpty()){
 			if (((String)in_message.get("owner")).equals("")){
 				return (String) in_message.get("roomid") + " is yet to be created.";
