@@ -25,6 +25,19 @@ public class Account {
 	private Set<String> ownedRooms = new HashSet<String>();
 	private int failedLoginAttempts = 0;
 	private final int MAXLOGIN = 3;
+	private static final int PASSWORDLENGTH = 3;
+	
+	
+	public static byte[] generateSalt() throws NoSuchAlgorithmException {
+		  SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
+		  byte[] salt = new byte[8];
+		  random.nextBytes(salt);
+		  return salt;
+	}
+	
+	public static boolean validPassword(String password){
+		  return (password.length() < PASSWORDLENGTH);
+	}
 	
 	public Account(String userName, String password) throws NoSuchAlgorithmException, InvalidKeySpecException{
 		this.userName = userName;
@@ -66,14 +79,6 @@ public class Account {
 	  KeySpec spec = new PBEKeySpec(password.toCharArray(), salt, iterations, derivedKeyLength);
 	  SecretKeyFactory f = SecretKeyFactory.getInstance(algorithm);
 	  return f.generateSecret(spec).getEncoded();
-	 }
-	
-	
-	public byte[] generateSalt() throws NoSuchAlgorithmException {
-	  SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
-	  byte[] salt = new byte[8];
-	  random.nextBytes(salt);
-	  return salt;
 	 }
 	
 	public void addRoomOwnership(String roomID){

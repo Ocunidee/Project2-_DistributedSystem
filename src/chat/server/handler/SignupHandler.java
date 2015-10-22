@@ -25,6 +25,10 @@ public class SignupHandler extends AbstractCommandHandler {
 			String username = (String) in_message.get("username");
 			if(isValidUserName(username) && !ConnectionsSupervisor.isUserNameTaken(username)){
 				String password = (String) in_message.get("password");
+				if(!Account.validPassword(password)){
+					sender.sendMessage(new MessageHandler().newMessage("Your password must be longer", "system"));
+					return;
+				}
 				try {
 					Account account = new Account(username, password);
 					sender.setAccount(account);
