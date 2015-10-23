@@ -58,7 +58,7 @@ public class TCPClient {
 			int serverPort = values.getPort();
 			String password = "password";
 			String fileSep = System.getProperty("file.separator");
-			File JKS = new File("Resources" + fileSep + "server2.jks");
+			File JKS = new File("Resources" + fileSep + "chatClientTrustStore.jks");
 			char[] myPassword = password.toCharArray();
 			System.out.println("myPassword " + myPassword.toString() + ", myHost: " + myHost + ", serverPort " + serverPort);
 			s = setupSSL(getMyHost(), serverPort, myPassword, JKS);  

@@ -31,7 +31,7 @@ public class TCPServer {
 			int serverPort = values.getPort(); 
 			
 			String fileSep = System.getProperty("file.separator");
-			File JKS = new File("Resources" + fileSep + "server2.jks");
+			File JKS = new File("Resources" + fileSep + "chatsecure.jks");
 			String password = "password";
 			char[] myPassword = password.toCharArray();
 			//listenSocket = new ServerSocket(serverPort);
