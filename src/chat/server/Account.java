@@ -25,7 +25,7 @@ public class Account {
 	private Set<String> ownedRooms = new HashSet<String>();
 	private int failedLoginAttempts = 0;
 	private final int MAXLOGIN = 3;
-	private static final int PASSWORDLENGTH = 3;
+	private static final int PASSWORDLENGTH = 7;
 	
 	
 	public static byte[] generateSalt() throws NoSuchAlgorithmException {

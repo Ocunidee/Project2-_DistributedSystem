@@ -240,7 +240,7 @@ public class TCPClient {
 							
 			default:
 				System.out.println(("Invalid command. Valid commands are : " + "\n" + "#identitychange newName" + "\n" + "#join room" + "\n" + 
-				"#who room" + "\n" + "#quit" + "\n" + "#list" + "\n" + "#createroom room"+  "\n" + "#kick room user duration_in_sec" + "\n" + "#delete room"));
+				"#who room" + "\n" + "#quit" + "\n" + "#list" + "\n" + "#createroom room"+  "\n" + "#kick room user duration_in_sec" + "\n" + "#delete room" + "\n" +"#signup username password" + "\n" + "#login username password"));
 				out_json.put("type", "invalid");
 				System.out.print("[" + getRoomID() + "] "+ getUserName() + "> ");
 				break;
