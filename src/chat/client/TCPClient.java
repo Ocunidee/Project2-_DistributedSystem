@@ -56,7 +56,7 @@ public class TCPClient {
 			parser.parseArgument(args);
 			TCPClient.setMyHost(values.getHost());
 			int serverPort = values.getPort();
-			String password = "password";
+			String password = values.getPassword();
 			String fileSep = System.getProperty("file.separator");
 			File JKS = new File("Resources" + fileSep + "chatClientTrustStore.jks");
 			char[] myPassword = password.toCharArray();

@@ -32,7 +32,7 @@ public class TCPServer {
 			
 			String fileSep = System.getProperty("file.separator");
 			File JKS = new File("Resources" + fileSep + "chatsecure.jks");
-			String password = "password";
+			String password = values.getPassword();
 			char[] myPassword = password.toCharArray();
 			//listenSocket = new ServerSocket(serverPort);
 			sslServerSocket = setupSSL(serverPort, JKS, myPassword);

@@ -13,6 +13,13 @@ public class CommandLineValuesServer {
 	public int getPort() {
 		return port;
 	}
+	
+	@Option(required = true, name = "-k", aliases = {"--keystore"}, usage="Keystore password, check README")
+	private String password;
+
+	public String getPassword() {
+		return password;
+	}
 
 	
 }
