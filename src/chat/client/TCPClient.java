@@ -3,12 +3,10 @@ package chat.client;
 
 import java.io.BufferedReader;
 import java.io.EOFException;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.net.Socket;
 import java.net.UnknownHostException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
@@ -19,7 +17,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
@@ -34,6 +31,7 @@ import chat.client.handler.RoomChangeHandler;
 import chat.client.handler.RoomContentsHandler;
 import chat.client.handler.RoomListHandler;
 import chat.common.JsonHandler;
+import chat.server.TCPServer;
 
 
 public class TCPClient {
@@ -57,11 +55,10 @@ public class TCPClient {
 			TCPClient.setMyHost(values.getHost());
 			int serverPort = values.getPort();
 			String password = values.getPassword();
-			String fileSep = System.getProperty("file.separator");
-			File JKS = new File("Resources" + fileSep + "chatClientTrustStore.jks");
+			InputStream jksIn = TCPClient.class.getResourceAsStream("chatClientTrustStore.jks");
 			char[] myPassword = password.toCharArray();
-			System.out.println("myPassword " + myPassword.toString() + ", myHost: " + myHost + ", serverPort " + serverPort);
-			s = setupSSL(getMyHost(), serverPort, myPassword, JKS);
+
+			s = setupSSL(getMyHost(), serverPort, myPassword, jksIn);
 			System.out.println(s.getSession().getProtocol());
 			BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream(),"UTF-8"));
 			OutputStreamWriter out =new OutputStreamWriter( s.getOutputStream(),"UTF-8");
@@ -340,14 +337,14 @@ public class TCPClient {
 	}
 	
 	
-	private static SSLSocket setupSSL(String host, int port, char[] password, File JKS) {
+	private static SSLSocket setupSSL(String host, int port, char[] password, InputStream JKSInputStream) {
 		SSLSocket SSLsocket = null;	
 		try {
 			SSLContext sslContext = SSLContext.getInstance( "SSL" );
             KeyStore keyStore = KeyStore.getInstance("JKS");
             TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance("SunX509");
             
-            keyStore.load(new FileInputStream(JKS),password);
+            keyStore.load(JKSInputStream, password);
             trustManagerFactory.init(keyStore);
             sslContext.init(null, trustManagerFactory.getTrustManagers(), null);
             SSLSocketFactory f = sslContext.getSocketFactory();

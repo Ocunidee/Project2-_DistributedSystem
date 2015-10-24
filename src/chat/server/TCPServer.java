@@ -3,6 +3,7 @@ package chat.server;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.*;
 import java.security.*;
 import java.security.cert.CertificateException;
@@ -15,7 +16,7 @@ import javax.net.ssl.SSLServerSocketFactory;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
 
-// hope it gets pushed
+
 public class TCPServer {
 	
 	public static void main (String args[]) {
@@ -31,11 +32,11 @@ public class TCPServer {
 			int serverPort = values.getPort(); 
 			
 			String fileSep = System.getProperty("file.separator");
-			File JKS = new File("Resources" + fileSep + "chatsecure.jks");
+			InputStream jksIn = TCPServer.class.getResourceAsStream("chatsecure.jks");
 			String password = values.getPassword();
 			char[] myPassword = password.toCharArray();
 			//listenSocket = new ServerSocket(serverPort);
-			sslServerSocket = setupSSL(serverPort, JKS, myPassword);
+			sslServerSocket = setupSSL(serverPort, jksIn, myPassword);
 
 			while(true) {
 				System.out.println("Server listening for a connection");
@@ -70,7 +71,7 @@ public class TCPServer {
 	
 	
 	
-	private static SSLServerSocket setupSSL(int serverPort, File JKS,
+	private static SSLServerSocket setupSSL(int serverPort, InputStream JKS,
 			char[] serverPassword) {
 		SSLContext SSLcontext = null;
 		KeyManagerFactory keyManagerFactory = null;
@@ -82,7 +83,7 @@ public class TCPServer {
 			SSLcontext = SSLContext.getInstance("SSL");
 			keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
 			keyStore = KeyStore.getInstance("JKS");
-			keyStore.load(new FileInputStream(JKS), serverPassword);
+			keyStore.load(JKS, serverPassword);
 			keyManagerFactory.init(keyStore, serverPassword);
 			SSLcontext.init(keyManagerFactory.getKeyManagers(), null, null);
 			SSLServerSocketFactory SSLserverSocketFactory = SSLcontext
