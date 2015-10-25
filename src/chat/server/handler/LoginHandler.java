@@ -24,7 +24,15 @@ public class LoginHandler extends AbstractCommandHandler {
 		String username = (String) in_message.get("username");
 		String password = (String) in_message.get("password");
 		Account account = ConnectionsSupervisor.getAccountByUsername(username);
-		if (account != null && account.authenticate(password)){			
+		if( account == null){
+			sender.sendMessage(new MessageHandler().newMessage("Incorrect username or password", "system"));
+			return;
+		}
+		if(checkLoggedin(account)){
+			sender.sendMessage(new MessageHandler().newMessage("Someone is already logged into this account", "system"));
+			return;
+		}
+		if( account.authenticate(password)){
 			setAccountsRooms(sender, account);
 			setRoomsAccount(sender, account);
 			sender.sendMessage(new MessageHandler().newMessage("Login successful", "system"));
@@ -66,6 +74,15 @@ public class LoginHandler extends AbstractCommandHandler {
 		}
 	}
 
+	private boolean checkLoggedin(Account account){
+		for (Connection client: ConnectionsSupervisor.getClients()){
+			if (account.equals(client.getAccount())){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	
 	public String getTYPE_KEY() {
 		return TYPE_KEY;

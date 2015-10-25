@@ -25,7 +25,7 @@ public class Account {
 	private Set<String> ownedRooms = new HashSet<String>();
 	private int failedLoginAttempts = 0;
 	private final int MAXLOGIN = 3;
-	private static final int PASSWORDLENGTH = 7;
+	private static final int PASSWORDLENGTH = 8;
 	
 	
 	public static byte[] generateSalt() throws NoSuchAlgorithmException {
@@ -36,7 +36,7 @@ public class Account {
 	}
 	
 	public static boolean validPassword(String password){
-		  return (password.length() < PASSWORDLENGTH);
+		  return (PASSWORDLENGTH <= password.length());
 	}
 	
 	public Account(String userName, String password) throws NoSuchAlgorithmException, InvalidKeySpecException{

@@ -59,7 +59,6 @@ public class TCPClient {
 			char[] myPassword = password.toCharArray();
 
 			s = setupSSL(getMyHost(), serverPort, myPassword, jksIn);
-			System.out.println(s.getSession().getProtocol());
 			BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream(),"UTF-8"));
 			OutputStreamWriter out =new OutputStreamWriter( s.getOutputStream(),"UTF-8");
 			consoleReader(out);
